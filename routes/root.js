@@ -3,7 +3,7 @@ const router = require("express").Router();
 router
   .route("/")
   .get((req, res) => {
-    res.json({ code: 200, message: "Welcome to the server!" });
+    res.json({ code: 200, message: "Welcome to our server!" });
   })
   .post((req, res) => {
     const { Title, Body, UserId } = req.body;
