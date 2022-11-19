@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(require("cors")());
 
 app.use(require("./routes/root"));
-app.use(require('./routes/auth'));
+app.use(require("./routes/auth"));
 app.use(require("./routes/missing"));
 
 app.listen(port, () => {
