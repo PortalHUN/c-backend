@@ -2,6 +2,10 @@ const router = require("express").Router();
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 
+///
+/// https://github.com/gitdagray/mern_stack_course/blob/main/lesson_08-backend/controllers/authController.js
+///
+
 router.route("/auth/register").post(async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) return res.status(400).send("Missing Syntax.");
