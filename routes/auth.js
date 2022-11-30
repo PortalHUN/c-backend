@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 
 ///
 /// https://github.com/gitdagray/mern_stack_course/blob/main/lesson_08-backend/controllers/authController.js
@@ -28,10 +29,32 @@ router.route("/auth/login").post(async (req, res) => {
     `SELECT u.Username, u.Password FROM users AS u WHERE u.Username = ${db.escape(username)} && u.Active = 1;`,
     async (err, row) => {
       if (err) return res.status(500).send("Internal Server Error.");
-      if (!row[0]) return res.status(400).send("Wrong username or password.");
+      if (!row[0]) return res.status(401).send("Wrong username or password.");
       const success = await bcrypt.compare(password, row[0].Password);
-      if (!success) return res.status(400).send("Wrong username or password.");
-      return res.status(200).send("Logged in!");
+      if (!success) return res.status(401).send("Wrong username or password.");
+
+      const accessToken = jwt.sign(
+        {
+          Userinfo:{
+            username: row[0].Username
+          }
+        },
+      process.env.ACCESS_TOKEN_SECRET,
+      {expiresIn:'30m'}
+      );
+
+      const refreshToken = jwt.sign({
+        username: row[0].Username
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      {expiresIn: '7d'}
+      )
+      res.cookie('jwt', refreshToken, {
+        sameSite: 'None',
+        maxAge: 7*24*60*60*1000
+      })
+
+      return res.status(200).json({accessToken});
     }
   );
 });
