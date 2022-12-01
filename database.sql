@@ -1,29 +1,21 @@
-DROP USER `c-backend`@`%`;
-DROP DATABASE `c-backend`;
-FLUSH PRIVILEGES;
-
-CREATE USER `c-backend`@`%` IDENTIFIED BY 'asdasd';
 CREATE DATABASE IF NOT EXISTS `c-backend`;
-GRANT ALL PRIVILEGES ON `c-backend`.* TO 'c-backend'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
+USE `c-backend`;
 
-CREATE TABLE users (
-  ID int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  Username varchar(255) NOT NULL UNIQUE,
-  Email varchar(255) NOT NULL UNIQUE,
-  Password varchar(255) NOT NULL
-);
+CREATE TABLE IF NOT EXISTS `users` (
+    ID int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  	Username varchar(255) NOT NULL UNIQUE,
+  	Email varchar(255) NOT NULL UNIQUE,
+  	Password varchar(255) NOT NULL
+    );
+    
+INSERT INTO users (Username, Email, Password) VALUES ("PortalHUN", "giotomi03@gmail.com", "$2b$10$JRaVgDirxosTs5cSl9/U6OUJe4L5jaMLhvj.voES68nH3gWdyjvfa");
 
-INSERT INTO users (Username, Email, Password) VALUES 
-("Portal","kszabolcs1020@gmail.com", "$2a$10$DA04VqZstzUiU/U0iw8qVu0M55mtZzFb3O7bNYDbZWjKbnf3ByweW"),
-("PortalHUN", "giotomi03@gmail.com", "$2a$10$DA04VqZstzUiU/U0iw8qVu0M55mtZzFb3O7bNYDbZWjKbnf3ByweW");
-
-CREATE TABLE classes (
+CREATE TABLE IF NOT EXISTS classes (
   ID int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   Name varchar(255) NOT NULL
 );
 
-CREATE TABLE characters (
+CREATE TABLE IF NOT EXISTS characters (
   ID int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   UserID int(11) UNSIGNED NOT NULL,
   ClassID int(11) UNSIGNED NOT NULL,
@@ -47,10 +39,3 @@ INSERT INTO classes (Name) VALUES
 ("Wizard"),
 ("Artificer"),
 ("Blood Hunter");
-
-INSERT INTO characters (UserID, ClassID, Name) VALUES 
-(1, 1, "Portal"),
-(1, 1, "Portalasd"),
-(1, 1, "Portal1"),
-(1, 1, "Portal2"),
-(2, 6, "Calm");
