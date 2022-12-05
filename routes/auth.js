@@ -24,11 +24,14 @@ router.route("/auth/register").post(async (req, res) => {
 
 router.route("/auth/login").post(async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) return res.status(400).send("Missing Syntax.");
+  if (!username || !password) return res.status(400).send("Missing Information.");
   await db.query(
     `SELECT u.Username, u.Password FROM users AS u WHERE u.Username = ${db.escape(username)};`,
     async (err, row) => {
-      if (err) {console.log(err); return res.status(500).send("Internal Server Error.");}
+      if (err){
+        console.log(err)
+        return res.status(500).send("Internal Server Error.");
+      }
       if (!row[0]) return res.status(401).send("Wrong username or password.");
       const success = await bcrypt.compare(password, row[0].Password);
       if (!success) return res.status(401).send("Wrong username or password.");
