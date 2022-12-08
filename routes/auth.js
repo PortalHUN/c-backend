@@ -61,4 +61,43 @@ router.route("/auth/login").post(async (req, res) => {
     }
   );
 });
+
+router.route("/auth/refresh",(req,res)=>{
+  const cookies = req.cookies;
+
+  if(!cookies?.jwt) return res.status(401).send("Unauthorized.");
+
+  const refreshToken = cookies.jwt;
+
+  jwt.verify(refreshToken,
+    proccess.env.REFRESH_TOKEN_SECRET,
+    async (err, decoded)=>{
+      if(err) return res.status(403).send("Forbidden.");
+
+      db.query(`SELECT u.Username FROM users AS u WHERE u.Username = ${decoded.username};`,(err, row)=>{
+        if(err) return res.status(500).send(err);
+        if(!row[0]) return res.status(401).send("Unauthorized.");
+
+        const accessToken = jwt.sign(
+          {
+            Userinfo:{
+              username: row[0].Username
+            }
+          },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn:'30m'}
+        );
+
+        res.status(200).json(accessToken);
+      })
+    })
+})
+
+router.route('/auth/logout',(req,res)=>{
+  const cookies = req.cookies;
+  if(!cookies?.jwt) return res.status(204);
+  res.clearCookie("jwt");
+  res.status(200).send("Cookie Cleared");
+})
+
 module.exports = router;
