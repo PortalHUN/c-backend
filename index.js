@@ -11,9 +11,11 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(require("cors")());
+app.use(require('cookie-parser')());
 
 app.use(require("./routes/root"));
 app.use(require("./routes/auth"));
+app.use(require('./routes/notes'));
 app.use(require("./routes/missing"));
 
 app.listen(port, () => {
