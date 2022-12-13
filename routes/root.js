@@ -6,7 +6,6 @@ router
     return res.status(200).send("OK");
   })
   .post((req, res) => {
-    console.log(req.headers);
     return res.json(req.body);
   });
 
